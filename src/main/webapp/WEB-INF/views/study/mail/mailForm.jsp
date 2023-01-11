@@ -16,27 +16,27 @@
   <script>
     'use strict';
 		
-		function jusorokView() {
-			$("myModal").on("show.bs.modal", function (e) {
-				$(".modal-header #cnt").html(${cnt});
-				let jusorok = '';
-				jusorok += '<table class="table table-hover">';
-				jusorok += '<tr class="table-dark text-dark text-center">';
-				jusorok += '<th>번호</th><th>아이디</th><th>성명</th><th>메일주소</th>';
-				jusorok += '</tr>';
-				jusorok += '<c:forEach var="vo" items="${vos}" varStatus="st">';
-				jusorok += '<tr onclick="location.href=\'${ctp}/study/mail/mailForm?email=${vo.email}\';" class="text-center">';
-				jusorok += '<td>${st.count}</td>';
-				jusorok += '<td>${vo.mid}</td>';
-				jusorok += '<td>${vo.name}</td>';
-				jusorok += '<td>${vo.email}</td>';
-				jusorok += '</tr>';
-				jusorok += '</c:forEach>';
-				jusorok += '</table>';
-				
-				$(".modal-body #jusorok").html(${jusorok});
-			});
-		}
+    function jusorokView() {
+    	$("#myModal").on("show.bs.modal", function(e){
+    		$(".modal-header #cnt").html(${cnt});
+    		let jusorok = '';
+    		jusorok += '<table class="table table-hover">';
+    		jusorok += '<tr class="table-dark text-dark text-center">';
+    		jusorok += '<th>번호</th><th>아이디</th><th>성명</th><th>메일주소</th>';
+    		jusorok += '</tr>';
+    		jusorok += '<c:forEach var="vo" items="${vos}" varStatus="st">';
+    		jusorok += '<tr onclick="location.href=\'${ctp}/study/mail/mailForm?email=${vo.email}\';" class="text-center">';
+    		jusorok += '<td>${st.count}</td>';
+    		jusorok += '<td>${vo.mid}</td>';
+    		jusorok += '<td>${vo.name}</td>';
+    		jusorok += '<td>${vo.email}</td>';
+    		jusorok += '</tr>';
+    		jusorok += '</c:forEach>';
+    		jusorok += '';
+    		jusorok += '</table>';
+    		$(".modal-body #jusorok").html(jusorok);
+    	});
+    }
 	</script>
 </head>
 <body>
@@ -52,7 +52,7 @@
 				<th>받는사람</th>
 				<td>
 					<div class="row">
-	          <div class="col-10"><input type="text" name="toMail" placeholder="받는사람 메일주소를 입력하세요." class="form-control" required /></div>
+	          <div class="col-10"><input type="text" value="${email}" name="toMail" placeholder="받는사람 메일주소를 입력하세요." class="form-control" required /></div>
 	          <div class="col-2"><input type="button" value="주소록" onclick="jusorokView()" class="btn btn-info form-control" data-toggle="modal" data-target="#myModal" /></div>
           </div>
 				</td>

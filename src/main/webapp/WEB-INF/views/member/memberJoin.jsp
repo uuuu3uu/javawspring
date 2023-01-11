@@ -208,7 +208,7 @@
 						$("#nickName").focus();
 					}
 					else {
-						alert("사용 가능한 닉네팀입니다");
+						alert("사용 가능한 닉네임입니다");
 						nickCheckSw = 1;
 					}
 				},
@@ -224,7 +224,7 @@
 <jsp:include page="/WEB-INF/views/include/slide2.jsp" />
 <p><br/></p>
 <div class="container" style="padding:30px">
-  <form name="myform" method="post" class="was-validated">
+  <form name="myform" method="post" class="was-validated" enctype="multipart/form-data">
     <h2>회 원 가 입</h2>
     <br/>
     <div class="form-group">

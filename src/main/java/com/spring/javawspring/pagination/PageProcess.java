@@ -3,6 +3,7 @@ package com.spring.javawspring.pagination;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.spring.javawspring.dao.BoardDAO;
 import com.spring.javawspring.dao.GuestDAO;
 import com.spring.javawspring.dao.MemberDAO;
 
@@ -14,17 +15,22 @@ public class PageProcess {
 	@Autowired
 	MemberDAO memberDAO;
 
-
+	@Autowired
+	BoardDAO boardDAO;
+	
 	public PageVO totRecCnt(int pag, int pageSize, String section, String part, String searchString) {
 		PageVO pageVO = new PageVO();
 		
 		int totRecCnt = 0;
 		
 		if(section.equals("member")) {
-			totRecCnt = memberDAO.totRecCnt();
+			totRecCnt = memberDAO.totRecCnt(searchString);
 		}
 		else if(section.equals("guest")) {
 			totRecCnt = guestDAO.totRecCnt();
+		}
+		else if(section.equals("board")) {
+			totRecCnt = boardDAO.totRecCnt();
 		}
 		// 다른 곳에 더 추가하고 싶으면 else if 사용해서 한다..
 		

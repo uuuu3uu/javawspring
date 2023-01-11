@@ -1,12 +1,16 @@
 package com.spring.javawspring.service;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.spring.javawspring.common.JavawspringProvide;
 import com.spring.javawspring.dao.MemberDAO;
 import com.spring.javawspring.vo.MemberVO;
 
@@ -29,9 +33,30 @@ public class MemberServiceImpl implements MemberService {
 
 
 	@Override
-	public int setMemberJoinOk(MemberVO vo) {
-		
-		return memberDAO.setMemberJoinOk(vo);
+	public int setMemberJoinOk(MultipartFile fName, MemberVO vo) {
+		// 업로드 된 사진을 서버 파일 시스템에 저장시켜준다.
+		int res = 0;
+		try {
+			String oFileName = fName.getOriginalFilename();
+			if(oFileName.equals("")) {
+				vo.setPhoto("noimage.jpg");
+			}
+			else {
+				UUID uid = UUID.randomUUID();	// 중복된 이름을 주지 않으려고
+				String saveFileName = uid + "_" + oFileName;
+				
+				JavawspringProvide ps = new JavawspringProvide();
+				ps.writeFile(fName, saveFileName, "member");
+				vo.setPhoto(saveFileName);
+			}
+			memberDAO.setMemberJoinOk(vo);
+			res = 1;
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return res;
+
 	}
 
 	@Override
@@ -65,13 +90,13 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public int totRecCnt() {
 		
-		return memberDAO.totRecCnt();
+		return memberDAO.totRecCnt("");
 	}
 
 	@Override
-	public ArrayList<MemberVO> getMemberList(int startIndexNo, int pageSize) {
+	public ArrayList<MemberVO> getMemberList(int startIndexNo, int pageSize, String mid) {
 		
-		return memberDAO.getMemberList(startIndexNo, pageSize);
+		return memberDAO.getMemberList(startIndexNo, pageSize, mid);
 	}
 
 	@Override
@@ -86,11 +111,7 @@ public class MemberServiceImpl implements MemberService {
 		return memberDAO.memberInforGet(mid);
 	}
 	
-	// 회원 삭제하기
-	@Override
-	public void memberDeleteOkGet(String mid) {
-		memberDAO.memberDeleteOkGet(mid);
-	}
+
 	
 	
 	@Override
@@ -104,6 +125,38 @@ public class MemberServiceImpl implements MemberService {
 		
 		return memberDAO.getTermMemberList(startIndexNo, pageSize, mid);
 	}
+
+	@Override
+	public void setMemberPwdUpdate(String mid, String pwd) {
+		memberDAO.setMemberPwdUpdate(mid, pwd);
+		
+	}
+
+	// 회원 삭제하기
+	@Override
+	public void memberDeleteOk(String mid) {
+		memberDAO.memberDeleteOk(mid);
+		
+	}
+	
+	//비밀번호 확인하기
+
+	
+	// 회원 수정하기
+	@Override
+	public MemberVO memberUpdate(String mid) {
+		return memberDAO.memberUpdate(mid);
+	}
+//회원 수정하기 처리
+	@Override
+	public MemberVO setMemberUpdate(MemberVO vo) {
+		
+		return memberDAO.setMemberUpdate(vo);
+		
+	}
+	
+
+
 	
 
 

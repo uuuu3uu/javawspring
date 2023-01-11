@@ -2,6 +2,8 @@ package com.spring.javawspring.service;
 
 import java.util.ArrayList;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.spring.javawspring.vo.MemberVO;
 
 public interface MemberService {
@@ -10,7 +12,7 @@ public interface MemberService {
 
 	public MemberVO getMemberNickNameCheck(String nickName);
 
-	public int setMemberJoinOk(MemberVO vo);
+	public int setMemberJoinOk(MultipartFile fName, MemberVO vo);
 
 	public void setMemberVisitProcess(MemberVO vo);
 
@@ -18,7 +20,7 @@ public interface MemberService {
 
 	public int totTermRecCnt(String mid);
 	
-	public ArrayList<MemberVO> getMemberList(int startIndexNo, int pageSize);
+	public ArrayList<MemberVO> getMemberList(int startIndexNo, int pageSize, String mid);
 
 	public ArrayList<MemberVO> getTermMemberList(int startIndexNo, int pageSize, String mid);
 	
@@ -26,15 +28,22 @@ public interface MemberService {
 
 	public MemberVO memberInforGet(String mid);
 
-	public void memberDeleteOkGet(String mid);
+	public void setMemberPwdUpdate(String mid, String pwd);
 
+	public void memberDeleteOk(String mid);
 
+	public MemberVO memberUpdate(String mid);
+
+	public MemberVO setMemberUpdate(MemberVO vo);
+
+	// public ArrayList<MemberVO> adminMemberSearch(String mid);
 
 
 
 	
 
-
+	
+	
 	
 
 	
