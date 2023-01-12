@@ -13,7 +13,7 @@ public interface BoardDAO {
 
 	public List<BoardVO> getBoardList(@Param("startIndexNo") int startIndexNo, @Param("pageSize") int pageSize, @Param("part") String part, @Param("SearchString") String SearchString);
 
-	public int totRecCnt(String part, String searchString);
+	public int totRecCnt(@Param("part") String part, @Param("searchString") String searchString);
 
 	public int setBoardInput(@Param("vo") BoardVO vo);
 
