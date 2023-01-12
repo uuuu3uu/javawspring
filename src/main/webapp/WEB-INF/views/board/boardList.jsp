@@ -18,9 +18,9 @@
     
     function searchCheck() {
     	let searchString = $("#searchString").val();
-    	
+    	let part = $("#part").val();
     	if(searchString.trim() == "") {
-    		alert("찾고자 하는 검색어를 입력하세요!");
+    		alert("검색어를 입력하세요");
     		searchForm.searchString.focus();
     	}
     	else {
@@ -115,9 +115,9 @@
 <br/>
 <!-- 검색기 처리 시작  -->
 <div class="container text-center">
-  <form name="searchForm" method="post" action="${ctp}/boSearch">
+  <form name="searchForm">
     <b>검색 : </b>
-    <select name="search">
+    <select name="part">
       <option value="title">글제목</option>
       <option value="nickName">글쓴이</option>
       <option value="content">글내용</option>

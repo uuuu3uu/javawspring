@@ -8,7 +8,6 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,6 +17,7 @@ import com.spring.javawspring.pagination.PageProcess;
 import com.spring.javawspring.pagination.PageVO;
 import com.spring.javawspring.service.BoardService;
 import com.spring.javawspring.service.MemberService;
+import com.spring.javawspring.vo.BoardReplyVO;
 import com.spring.javawspring.vo.BoardVO;
 import com.spring.javawspring.vo.GoodVO;
 import com.spring.javawspring.vo.MemberVO;
@@ -40,11 +40,15 @@ public class boardController {
 	@RequestMapping(value = "/boardList", method=RequestMethod.GET)
 	public String boardListGet(Model model,
 		@RequestParam(name="pag", defaultValue = "1", required = false) int pag,
-		@RequestParam(name="pageSize", defaultValue = "5", required = false) int pageSize) {
-		PageVO pageVO = pageProcess.totRecCnt(pag, pageSize, "board", "", "");
+		@RequestParam(name="pageSize", defaultValue = "5", required = false) int pageSize,
+		@RequestParam(name="searchString", defaultValue = "", required = false) String searchString,
+		@RequestParam(name="part", defaultValue = "title", required = false) String part
+		) {
 		
+		PageVO pageVO = pageProcess.totRecCnt(pag, pageSize, "board", part, searchString);
 		
-		List<BoardVO> vos = boardService.getBoardList(pageVO.getStartIndexNo(),pageSize);
+		// 전체리스트를 불러오는 메소드
+		List<BoardVO> vos = boardService.getBoardList(pageVO.getStartIndexNo(),pageSize, searchString, part);
 		
 		model.addAttribute("vos" , vos);
 		model.addAttribute("pageVO" , pageVO);
@@ -100,9 +104,14 @@ public class boardController {
 		ArrayList<BoardVO> pnVos = boardService.getPrevNext(idx); // 값이 두개가 넘어오도록 처리하겠다
 		//System.out.println("pnVos : " + pnVos);
 		model.addAttribute("pnVos",pnVos);
+	
+		// 댓글 가져오기(replyVOs)
+		List<BoardReplyVO> replyVos = boardService.getBoardReply(idx);
+		model.addAttribute("replyVos", replyVos);
 		
 		return "board/boardContent";
 	}
+	
 	
 	// 좋아요
 	@ResponseBody
@@ -173,6 +182,42 @@ public class boardController {
 		model.addAttribute("flag","?pag="+pag+"&pageSize="+pageSize);
 		
 		return "redirect:/msg/boardUpdateOk";
+	}
+	
+	// 댓글달기
+	@ResponseBody // ajax처리했으니까
+	@RequestMapping(value = "/boardReplyInput", method=RequestMethod.POST)
+	public String boardReplyInputPost(BoardReplyVO replyVo) {
+		int levelOrder = 0;
+		String strLevelOrder = boardService.getMaxLevelOrder(replyVo.getBoardIdx());
+		if(strLevelOrder != null) levelOrder = Integer.parseInt(strLevelOrder) + 1;
+		replyVo.setLevelOrder(levelOrder + 1);
+		
+		boardService.setBoardReplyInput(replyVo);
+		return "1";
+	}
+	
+	//대댓글(답변글)달기
+	@ResponseBody
+	@RequestMapping(value = "/boardReplyInput2", method=RequestMethod.POST)
+	public String boardReplyInput2Post(BoardReplyVO replyVo) {
+		//System.out.println("replyVo : " + replyVo);
+		boardService.setLevelOrderPlusUpdate(replyVo);
+		replyVo.setLevel(replyVo.getLevel()+1);
+		replyVo.setLevelOrder(replyVo.getLevelOrder()+1);
+		boardService.setBoardReplyInput2(replyVo);
+		return "";
+	}
+	
+
+	// 댓글 삭제하기
+	@ResponseBody
+	@RequestMapping(value = "/boardReplyDeleteOk", method = RequestMethod.POST)
+	public String boardReplyDeleteOk(int idx) {
+		
+		boardService.setBoardReplyDeleteOk(idx);
+		
+		return "";
 	}
 	
 }

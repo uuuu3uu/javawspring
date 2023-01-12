@@ -32,7 +32,7 @@
 <div class="container">
 	<h2>전체 회원 리스트</h2>
 	<br/>
-	<form name="myform">
+	<form name="myform"> <!-- 액션값이 없을경우에는 자기 자리로 간다 -->
 		<div class="row mb-2">
 			<div class="col form-inline">
 				<select name="memberSearchC" id="memberSearchC" class="form-control mr-2">

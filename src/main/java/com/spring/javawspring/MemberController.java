@@ -260,6 +260,7 @@ public class MemberController {
 
 		PageVO pageVo = pageProcess.totRecCnt(pag, pageSize, "member", "", mid);
 		
+		// 회원 검색하기위한 과정
 		List<MemberVO> vos = memberService.getMemberList(pageVo.getStartIndexNo(), pageSize, mid);
 		
 		model.addAttribute("vos", vos);
@@ -268,7 +269,7 @@ public class MemberController {
 		return "member/memberList";
 	}
 	
-	// 회원 검색
+	// 회원 검색(셀렉트박스 사용해서 처음에 내가 한거)
 	@RequestMapping(value = "/memberSearch", method = RequestMethod.POST)
 	public String memberSearchPost(String mSearch, String memberSearchC, Model model) {
 		ArrayList<MemberVO> vos = memberService.memberSearchPost(mSearch, memberSearchC);

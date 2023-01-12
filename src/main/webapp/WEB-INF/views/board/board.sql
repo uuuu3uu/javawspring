@@ -25,20 +25,23 @@ select * from board2;
 
 /* 게시판 댓글 달기 */
 create table boardReply2 (
-	idx 	int not null auto_increment,				/* 댓글 고유 번호 */
-	boardIdx int not null,										/* 원본글의 고유번호(외래키 지정) */
-	mid varchar(20) not null, 								/* 댓글 올린이의 아이디 */
-	nickName varchar(20) not null,						/* 댓글 올린이의 닉네임 */
-	wDate datetime default now(),							/* 댓글 올린 날짜 */
-	hostIp varchar(50) not null,							/* 댓글올린 PC의 IP */
-	content text not null,										/* 댓글 내용 */
+	idx 			 int not null auto_increment,		/* 댓글 고유 번호 */
+	boardIdx 	 int not null,									/* 원본글의 고유번호(외래키 지정) */
+	mid 			 varchar(20) not null, 					/* 댓글 올린이의 아이디 */
+	nickName 	 varchar(20) not null,					/* 댓글 올린이의 닉네임 */
+	wDate 		 datetime default now(),				/* 댓글 올린 날짜 */
+	hostIp 		 varchar(50) not null,					/* 댓글올린 PC의 IP */
+	content 	 text not null,									/* 댓글 내용 */
+	level			 int not null default 0,				/* 댓글 레벨 - 첫번째 댓글(부모댓글)의 레벨은 0번 */
+	levelOrder int not null default 0, 				/* 댓글의 순서 - 첫번째 댓글(부모댓글)의 levelOrder는 0번 */
 	primary key(idx),
-	foreign key(boardIdx) references board(idx)
+	foreign key(boardIdx) references board2(idx)
 	/* on update cascade  부모꺼 업데이트 하면 같이 업데이트한다..?
 	on delete restrict */
 );
 --drop table boardReply;
 desc boardReply2;
+select * from boardReply2;
 
 /* 날짜 처리 연습 */
 select now(); 		/* now() : 오늘 날짜와 시간을 보여준다 */

@@ -3,12 +3,13 @@ package com.spring.javawspring.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.spring.javawspring.vo.BoardReplyVO;
 import com.spring.javawspring.vo.BoardVO;
 import com.spring.javawspring.vo.GoodVO;
 
 public interface BoardService {
 
-	public List<BoardVO> getBoardList(int startIndexNo, int pageSize);
+	public List<BoardVO> getBoardList(int startIndexNo, int pageSize, String searchString, String part);
 
 	public int setBoardInput(BoardVO vo);
 
@@ -33,5 +34,19 @@ public interface BoardService {
 	public void imgCheckUpdate(String content);
 
 	public void setBoardUpdateOk(BoardVO vo);
+
+	public void setBoardReplyInput(BoardReplyVO replyVo);
+
+	public List<BoardReplyVO> getBoardReply(int idx);
+
+	public void setBoardReplyDeleteOk(int idx);
+
+	public String getMaxLevelOrder(int boardIdx);
+
+	public void setLevelOrderPlusUpdate(BoardReplyVO replyVo);
+
+	public void setBoardReplyInput2(BoardReplyVO replyVo);
+
+	
 
 }

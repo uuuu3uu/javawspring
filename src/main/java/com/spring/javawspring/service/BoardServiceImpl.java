@@ -17,6 +17,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.spring.javawspring.dao.BoardDAO;
+import com.spring.javawspring.vo.BoardReplyVO;
 import com.spring.javawspring.vo.BoardVO;
 import com.spring.javawspring.vo.GoodVO;
 
@@ -27,8 +28,8 @@ public class BoardServiceImpl implements BoardService {
 	BoardDAO boardDAO;
 
 	@Override
-	public List<BoardVO> getBoardList(int startIndexNo, int pageSize) {
-		return boardDAO.getBoardList(startIndexNo, pageSize);
+	public List<BoardVO> getBoardList(int startIndexNo, int pageSize, String part, String SearchString) {
+		return boardDAO.getBoardList(startIndexNo, pageSize, part, SearchString);
 	}
 
 	@Override
@@ -211,4 +212,40 @@ public class BoardServiceImpl implements BoardService {
 	public void setBoardUpdateOk(BoardVO vo) {
 		boardDAO.setBoardUpdateOk(vo);
 	}
+
+	@Override
+	public void setBoardReplyInput(BoardReplyVO replyVo) {
+		boardDAO.setBoardReplyInput(replyVo);
+		
+	}
+
+	@Override
+	public List<BoardReplyVO> getBoardReply(int idx) {
+		return boardDAO.getBoardReply(idx);
+	}
+
+	@Override
+	public void setBoardReplyDeleteOk(int idx) {
+		boardDAO.setBoardReplyDeleteOk(idx);
+		
+	}
+
+	@Override
+	public String getMaxLevelOrder(int boardIdx) {
+		return boardDAO.getMaxLevelOrder(boardIdx);
+	}
+
+	@Override
+	public void setLevelOrderPlusUpdate(BoardReplyVO replyVo) {
+		boardDAO.setLevelOrderPlusUpdate(replyVo);
+		
+	}
+
+	@Override
+	public void setBoardReplyInput2(BoardReplyVO replyVo) {
+		boardDAO.setBoardReplyInput2(replyVo);
+		
+	}
+
+	
 }

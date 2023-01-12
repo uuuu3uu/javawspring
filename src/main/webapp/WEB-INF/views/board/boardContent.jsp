@@ -12,6 +12,27 @@
   <jsp:include page="/WEB-INF/views/include/bs4.jsp" />
   <script>
   	'use strict';
+  	
+  	// 전체 댓글(보이기/가리기)
+  	$(document).ready(function() {
+  		$("#reply").show();
+  		$("#replyViewBtn").hide();
+  		
+  		$("#replyHiddenBtn").click(function() {
+  			$("#reply").slideUp(500);
+  			$("#replyViewBtn").show();
+  			$("#replyHiddenBtn").hide();
+			});
+  		
+  		$("#replyViewBtn").click(function() {
+  			$("#reply").slideDown(500);
+  			$("#replyViewBtn").hide();
+  			$("#replyHiddenBtn").show();
+			});
+  		
+  	});
+  	
+  	// 
   	function goodCheck() {
   		let gFlag = 1;
   		if('${sGFlag}' != '1') gFlag = -1; //참 // (sGFlag가 1 != 1) 1과 1이 같은데 !=(아니다)라고 말하고 있으니 그냥 let gFlag = 1; 인 상태로 boardGood 컨트롤러로 갑니다
@@ -54,7 +75,7 @@
     	
     	$.ajax({
     		type : "post",
-    		url  : "${ctp}/boReplyInput.bo",
+    		url  : "${ctp}/board/boardReplyInput",
     		data : query,
     		success:function(res) {
     			if(res == "1") {
@@ -78,23 +99,93 @@
 		
 			$.ajax({
 				type  : "post",
-				url		: "${ctp}/boReplyDeleteOk.bo",
+				url		: "${ctp}/board/boardReplyDeleteOk",
 				data  : {idx : idx},
-				success : function(res) {
-					if(res == "1") {
-						alert("댓글이 삭제되었습니다");
+				success : function() {
 						location.reload();
-					}
-					else {
-						alert("댓글 삭제 실패");
-					}
 				},
 				error : function() {
 					alert("전송오류")
 				}
 			});
 		}
-
+		
+		// 답변글(부모댓글의 댓글-대댓글)
+		function insertReply(idx, level, levelOrder, nickName) {
+			let insReply = '';
+			insReply += '<div class="container">';
+			insReply += '<table class="m-2 p-0" style="width:90%">';
+			insReply += '<tr>';
+			insReply += '<td class="p-0 text-left">';
+			insReply += '<div>';
+			insReply += '답변 댓글 달기 &nbsp;';
+			insReply += '<input type="text" name="nickName" value="${sNickName}" size="6" readonly class="p-0" />';
+			insReply += '</div>';
+			insReply += '</td>';
+			insReply += '<td>';
+			insReply += '<input type="button" value="답글달기" onclick="replyCheck2('+idx+','+level+','+levelOrder+')"/>';
+			insReply += '</td>';
+			insReply += '</tr>';
+			insReply += '<tr>';
+			insReply += '<td colspan="2" class="text-center p-0">';
+			insReply += '<textarea rows="3" class="form-control p-0 name="content" id="content'+idx+'">';
+			insReply += '@'+nickName+'\n';
+			insReply += '</textarea>';
+			insReply += '</td>';
+			insReply += '</tr>';
+			insReply += '</table>';
+			insReply += '</div>';
+			
+			$("#replyBoxOpenBtn"+idx).hide();
+    	$("#replyBoxCloseBtn"+idx).show();
+    	$("#replyBox"+idx).slideDown(500);
+    	$("#replyBox"+idx).html(insReply);
+    }
+    
+    function closeReply(idx) {
+    	$("#replyBoxOpenBtn"+idx).show();
+    	$("#replyBoxCloseBtn"+idx).hide();
+    	$("#replyBox"+idx).slideUp(500);
+    }
+		
+		function replyCheck2(idx, level, levelOrder) {
+    	let boardIdx = "${vo.idx}";
+    	let mid = "${sMid}";
+    	let nickName = "${sNickName}";
+    	//let content = "#content"+idx;
+    	//let contentVal = $(content).val();
+    	let content = $("#content"+idx).val();
+    	let hostIp = "${pageContext.request.remoteAddr}";
+    	
+    	if(content == "") {
+    		alert("답변글(대댓글)을 입력하세요!");
+    		$("#content"+idx).focus();
+    		return false;
+    	}
+    	
+    	let query = {
+    			boardIdx  : boardIdx,
+    			mid				: mid,
+    			nickName	: nickName,
+    			content		: content,
+    			hostIp		: hostIp,
+    			level			: level,
+    			levelOrder:levelOrder
+    	}
+    	
+    	$.ajax({
+    		type  : "post",
+    		url   : "${ctp}/board/boardReplyInput2",
+    		data  : query,
+    		success:function() {
+    			location.reload();
+    		},
+    		error : function() {
+    			alert("전송오류!!");
+    		}
+    	});
+    }
+	
   </script>
 </head>
 <body>
@@ -192,18 +283,31 @@
 	</c:if>
 </div>
 <br/>
+
+<!-- 댓글(대댓글)처리 -->
 <!-- 댓글리스트 보여주기 -->
-<div class="container">
+<div class="container text-center mb-3">
+	<input type="button" value="댓글보이기" id="replyViewBtn" class="btn btn-info" />
+	<input type="button" value="댓글가리기" id="replyHiddenBtn" class="btn btn-secondary" />
+</div>
+<div id="reply">
 	<table class="table table-hover text-center">
-		<tr>
+		<tr style="background-color:#eee;">
 			<th>작성자</th>
 			<th>댓글내용</th>
-			<th class="text-">작성일자</th>
-			<th>접속IP</th>
+			<th class="text-center">작성일자</th>
+			<th class="text-center">접속IP</th>
+			<th class="text-center">답글</th>
 		</tr>
 		<c:forEach var="replyVo" items="${replyVos}">
 			<tr>
-				<td>${replyVo.nickName}
+				<td class="text-left">
+					<c:if test="${replyVo.level <= 0}">${replyVo.nickName}</c:if> <!-- 부모댓글의 경우는 들여쓰기 하지 않는다 0번 -->
+					<c:if test="${replyVo.level > 0}">
+						<c:forEach var="i" begin="1" end="${replyVo.level}">&nbsp;&nbsp;&nbsp;&nbsp;</c:forEach>
+							└ ${replyVo.nickName}
+						
+					</c:if>
 					<c:if test="${sMid == replyVo.mid || sLevel == 0}">
 						(<a href="javascript:replyDelCheck(${replyVo.idx})" title="삭제하기">x</a>)
 					</c:if>
@@ -211,13 +315,21 @@
 				<td>
 					<b>${fn:replace(replyVo.content, newLine, "<br/>")}</b>
 				</td>
-				<td>${replyVo.wDate}</td>
-				<td>${replyVo.hostIp}</td>
+				<td class="text-center">${replyVo.WDate}</td>
+				<td class="text-center">${replyVo.hostIp}</td>
+				<td class="text-center">														<!-- 밑)원본글의 고유번호 -->	<!-- 원본글의 고유번호 -->
+					<input type="button" value="답글" onclick="insertReply('${replyVo.idx}', '${replyVo.level}', '${replyVo.levelOrder}', '${replyVo.nickName}')" id="replyBoxOpenBtn{replyVo.idx}" class="btn btn-sm btn-primary" />
+					<input type="button" value="닫기" onclick="closetReply('${replyVo.idx}')" id="replyBoxCloseBtn{replyVo.idx}" class="btn btn-sm btn-warning" style="display:none" />
+				</td>
 			</tr>
+			<tr>
+				<td colspan="5" class="m-0 p-0" style="border-top:none;"><div id="replyBox${replyVo.idx}"></div></td>
+ 			</tr>
 		</c:forEach>
 	</table>
 	<!-- 댓글 입력창 -->
-	<form name="replyForm" method="post" action="${ctp}/boardRlyInput}">
+	<%-- <form name="replyForm" method="post" action="${ctp}/board/boardRlyInput}"> --%>
+	<form name="replyForm">
 		<table class="table text-center">
 			<tr>
 				<td style="width:85%" class="text-left">
@@ -226,7 +338,7 @@
 				</td>
 				<td style="width:15%">
 					<br/>
-					<p>작성 : ${sNickName}</p>
+					<p>작성자 : ${sNickName}</p>
 	        <p>
 	        	<input type="button" value="댓글달기" onclick="replyCheck()" class="btn btn-info btn-sm"/>
 	        </p>

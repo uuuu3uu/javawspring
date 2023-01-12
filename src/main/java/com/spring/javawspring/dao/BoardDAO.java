@@ -5,14 +5,15 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.spring.javawspring.vo.BoardReplyVO;
 import com.spring.javawspring.vo.BoardVO;
 import com.spring.javawspring.vo.GoodVO;
 
 public interface BoardDAO {
 
-	public List<BoardVO> getBoardList(@Param("startIndexNo") int startIndexNo, @Param("pageSize") int pageSize);
+	public List<BoardVO> getBoardList(@Param("startIndexNo") int startIndexNo, @Param("pageSize") int pageSize, @Param("part") String part, @Param("SearchString") String SearchString);
 
-	public int totRecCnt();
+	public int totRecCnt(String part, String searchString);
 
 	public int setBoardInput(@Param("vo") BoardVO vo);
 
@@ -33,5 +34,19 @@ public interface BoardDAO {
 	public void setBoardDeleteOk(@Param("idx") int idx);
 
 	public void setBoardUpdateOk(@Param("vo") BoardVO vo);
+
+	public void setBoardReplyInput(@Param("replyVo") BoardReplyVO replyVo);
+
+	public List<BoardReplyVO> getBoardReply(@Param("idx") int idx);
+
+	public void setBoardReplyDeleteOk(@Param("idx") int idx);
+
+	public String getMaxLevelOrder(@Param("boardIdx") int boardIdx);
+
+	public void setLevelOrderPlusUpdate(@Param("replyVo") BoardReplyVO replyVo);
+
+	public void setBoardReplyInput2(@Param("replyVo") BoardReplyVO replyVo);
+
+	
 	
 }
