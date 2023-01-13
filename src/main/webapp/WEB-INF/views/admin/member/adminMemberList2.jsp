@@ -25,7 +25,9 @@
     
     function delCheck(idx) {
     	let ans = confirm("탈퇴처리 시키겠습니까?");
-    	if(ans) {	
+    	if(ans) {
+    		//location.href='${ctp}/admin/adminMemberDel?pag=${pageVo.pag}&idx='+idx;
+    		
     		let query = {
     			idx : idx,
     			pag : ${pageVo.pag}
@@ -40,10 +42,13 @@
         			location.reload();
         		},
         		error : function() {
-        			alert("전송 오류");
+        			alert("전송 오류~~");
         		}
-        });		
-    	} 	
+        	});
+    		
+    		
+    	}
+    	
     }
     
     function searchCheck(e) {

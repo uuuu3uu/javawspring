@@ -49,7 +49,6 @@
     - matchers(java.lang.CharSequence)
       제출된 인코딩 되지 않은 패스워드의 일치여부를 판단하기위해 인코딩된 패스워드와 비교 판단한다.
       반환타입은 boolean이다.
-
 	</p>
 	<hr/>
 	<p>

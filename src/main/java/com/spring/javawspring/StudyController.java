@@ -292,11 +292,22 @@ public class StudyController {
 		return "study/fileUpload/fileUploadForm";
 	}
 		
-//파일 업로드 처리하기
+	//파일 업로드 처리하기
 	@RequestMapping(value = "/fileUpload/fileUploadForm", method = RequestMethod.POST)
 	public String fileUploadFormPost(MultipartFile fName) {
 		int res = studyService.fileUpload(fName);
 		if(res == 1) return "redirect:/msg/fileUploadOk";
 		else  return "redirect:/msg/fileUploadNo";
 	}
+
+	// 달력 내역 가져오기
+	@RequestMapping(value = "/calendar", method = RequestMethod.GET)
+	public String calendarGet() {
+		studyService.getCalendar();
+		return "study/calendar/calendar";
+	}
+	
+	
+	
+
 }

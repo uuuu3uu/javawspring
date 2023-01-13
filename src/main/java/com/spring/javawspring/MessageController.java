@@ -120,6 +120,7 @@ public class MessageController {
 			model.addAttribute("url","board/boardList"+flag);
 		}
 		
+		
 	
 		return "include/message";
 	}
