@@ -8,8 +8,44 @@
   <title>title</title>
   <meta name="viewport" content="width=device-width, initial-scale=1"> 
   <jsp:include page="/WEB-INF/views/include/bs4.jsp"></jsp:include>
+  <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
   <script>
-  
+  	
+	  'use strict';
+		window.Kakao.init("5e75e2ab83f677c3d9f1043e96cae9c9");
+		
+		// 카카오 로그인
+  	function kakaoLogin() {
+  		window.Kakao.Auth.login({
+  			scope: 'profile_nickname, account_email',
+  			success:function(autoObj) {
+  				console.log(Kakao.Auth.getAccessToken(),"로그인 OK");
+  				console.log(autoObj);
+  				window.Kakao.API.request({
+  					url : '/v2/user/me',
+  					success:function(res) {
+  						const kakao_account = res.kakao_account;
+  						console.log(kakao_account);
+  						// alert(kakao_account.email + " / " + kakao_account.profile.nickname);
+  						location.href="${ctp}/member/memberKakaoLogin?nickName="+kakao_account.profile.nickname+"&email="+kakao_account.email;
+  					}
+  				});
+  			}
+  		});
+  	}
+  	
+  	// 카카오 로그아웃
+  	function kakaoLogout(kakaoKey) {
+  		// 다음 로그인시에 동의항목 체크하고 로그인할 수 있도록 로그아웃시키기
+  		/*
+			Kakao.API.request({
+	      url: '/v1/user/unlink',
+	    })
+	    */
+  		Kakao.Auth.logout(function() {
+  			console.log(Kakao.Auth.getAccessToken(), "토큰 정보가 없습니다.(로그아웃되셨습니다.)");
+  		});
+  	}
   </script>
 </head>
 <body>
@@ -43,6 +79,10 @@
 				    <button type="button" onclick="location.href='${ctp}/';" class="btn btn-primary">돌아가기</button><!--${ctp}절대경로 입력 필수  -->
 				    <button type="button" onclick="location.href='${ctp}/member/memberJoin';" class="btn btn-primary">회원가입</button>
 					</div>
+					<div class="mb-2">
+				    <a href="javascript:kakaoLogin();"><img src="${ctp}/images/kakao_login_medium_narrow.png" /></a>			      
+				    <a href="javascript:kakaoLogout();" class="btn btn-danger">로그아웃</a>			      
+			    </div>
 					<div class="row" style="font-size:12px">
 						<span class="col"><input type="checkbox" name="idCheck" checked />아이디 저장</span>
 						<span class="col">
