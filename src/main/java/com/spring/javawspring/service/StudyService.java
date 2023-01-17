@@ -21,5 +21,13 @@ public interface StudyService {
 	public int fileUpload(MultipartFile fName);
 
 	public void getCalendar();
+
+	public String qrCreate(String mid, String moveFlag, String realPath);
+
+	public String qrCreate2(String movie, String realPath);
+
+
+
+	
 	
 }

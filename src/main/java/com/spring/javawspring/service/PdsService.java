@@ -14,4 +14,8 @@ public interface PdsService {
 
 	public void setPdsDownNum(int idx);
 
+	public PdsVO getPdsContent(int idx);
+
+	public void setPdsDelete(PdsVO vo);
+
 }

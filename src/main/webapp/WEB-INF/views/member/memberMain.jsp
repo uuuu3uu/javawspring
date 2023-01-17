@@ -19,6 +19,14 @@
   <div id="memberInfo1" class="mr-5">
 	  <p><font color="blue"><b>${sNickName}</b></font>님 로그인 중이십니다.</p>
 	  <p>현재 <font color="blue"><b>${sStrLevel}</b></font> 등급 이십니다.</p>
+	  <c:if test="{!empty sImsiPwd">
+	  	<!-- 여기 임시비밀번호 발급처리하기 -->
+	  	<hr/>
+	  	현재 임시비밀번호를 발급하여 메일로 전송처리 하였습니다<br/>
+	  	개인정보를 확인하시고 필수 입력사항을 기재해 주세요 <br/>
+	  	<a href="${ctp}/member/memberPwdUpdate" class="btn btn-secondary"></a>
+	  	<hr/>
+	  </c:if> 
 	  <p>누적 포인트 : <span class="viewCheck">${vo.point}</span></p>
 	  <p>최종 접속일 : <span class="viewCheck">${fn:substring(vo.lastDate,0,fn:length(vo.lastDate)-2)}</span></p>
 	  <p>총 방문횟수 : <span class="viewCheck">${vo.visitCnt}</span></p>
